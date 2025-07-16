@@ -1,0 +1,159 @@
+import React, { useEffect } from 'react';
+import { Sun, Cloud, Sparkles, Heart } from 'lucide-react';
+import SearchBar from './components/SearchBar';
+import WeatherCard from './components/WeatherCard';
+import LoadingSpinner from './components/LoadingSpinner';
+import ErrorMessage from './components/ErrorMessage';
+import { useWeather } from './hooks/useWeather';
+import { getPleasantWeatherInfo } from './utils/weatherUtils';
+
+function App() {
+  const {
+    weather,
+    loading,
+    error,
+    unit,
+    fetchWeatherByCity,
+    fetchWeatherByLocation,
+    toggleUnit,
+    clearError
+  } = useWeather();
+
+  // Auto-fetch user's location weather on first load
+  useEffect(() => {
+    fetchWeatherByLocation();
+  }, []);
+
+  const getBackgroundClass = () => {
+    if (!weather) {
+      return 'bg-gradient-to-br from-blue-300 via-purple-400 to-pink-400';
+    }
+    
+    const pleasantInfo = getPleasantWeatherInfo(weather);
+    return `bg-gradient-to-br ${pleasantInfo.bgGradient}`;
+  };
+
+  return (
+    <div className={`min-h-screen transition-all duration-1000 ${getBackgroundClass()} relative overflow-hidden`}>
+      {/* Pleasant animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
+        
+        {/* Floating pleasant elements */}
+        <Sparkles className="absolute top-20 left-20 text-white/30 animate-bounce" size={24} />
+        <Heart className="absolute top-32 right-32 text-pink-300/40 animate-pulse" size={20} />
+        <Sun className="absolute bottom-32 left-32 text-yellow-300/40 animate-spin" size={28} />
+        <Cloud className="absolute bottom-20 right-20 text-white/30 animate-bounce delay-1000" size={32} />
+      </div>
+      
+      <div className="container mx-auto px-6 py-12 relative z-10">
+        {/* Pleasant Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="relative">
+              <Sun className="text-white animate-spin" size={56} />
+              <Sparkles className="absolute -top-2 -right-2 text-yellow-300 animate-pulse" size={20} />
+            </div>
+            <h1 className="text-5xl font-bold text-white tracking-tight">
+              Pleasant Weather
+            </h1>
+            <Heart className="text-pink-300 animate-pulse" size={40} />
+          </div>
+          <p className="text-white/90 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
+            Discover beautiful weather conditions around the world ✨
+          </p>
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <Sparkles className="text-yellow-300" size={16} />
+            <span className="text-white/80 text-sm font-medium">
+              Focusing on the bright side of weather
+            </span>
+            <Sparkles className="text-yellow-300" size={16} />
+          </div>
+        </div>
+
+        {/* Search Section */}
+        <div className="mb-12">
+          <SearchBar
+            onSearch={fetchWeatherByCity}
+            onUseCurrentLocation={fetchWeatherByLocation}
+            loading={loading}
+            error={error}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="max-w-6xl mx-auto">
+          {loading && (
+            <div className="flex flex-col items-center justify-center py-16">
+              <LoadingSpinner size={32} className="mb-6" />
+            </div>
+          )}
+
+          {error && (
+            <ErrorMessage 
+              message={error} 
+              onRetry={() => {
+                clearError();
+                if (weather) {
+                  fetchWeatherByCity(weather.name);
+                } else {
+                  fetchWeatherByLocation();
+                }
+              }}
+            />
+          )}
+
+          {weather && !loading && !error && (
+            <WeatherCard 
+              weather={weather} 
+              unit={unit} 
+              onToggleUnit={toggleUnit}
+            />
+          )}
+
+          {!weather && !loading && !error && (
+            <div className="text-center py-16">
+              <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-12 max-w-2xl mx-auto border border-white/30">
+                <div className="flex items-center justify-center gap-4 mb-6">
+                  <Sun className="text-yellow-300 animate-pulse" size={64} />
+                  <Cloud className="text-white/80" size={48} />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  Ready to Explore Pleasant Weather?
+                </h3>
+                <p className="text-white/90 text-lg font-medium max-w-lg mx-auto leading-relaxed mb-6">
+                  Search for any city or use your current location to discover beautiful weather conditions
+                </p>
+                <div className="flex items-center justify-center gap-2">
+                  <Sparkles className="text-yellow-300 animate-spin" size={16} />
+                  <span className="text-white/80 text-sm font-medium">
+                    Every day has its own beauty
+                  </span>
+                  <Sparkles className="text-yellow-300 animate-spin" size={16} />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Pleasant Footer */}
+        <div className="text-center mt-16 text-white/70">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Heart className="text-pink-300" size={16} />
+            <p className="text-sm font-medium">
+              Bringing you the bright side of weather
+            </p>
+            <Heart className="text-pink-300" size={16} />
+          </div>
+          <p className="text-xs">
+            Weather data by OpenWeatherMap | Designed with ☀️ and optimism
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
