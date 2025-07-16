@@ -62,7 +62,7 @@ A beautiful, optimistic weather application that focuses on presenting weather i
 2. **Environment Setup**:
    The API key is pre-configured in the `.env` file:
    ```
-   VITE_OPENWEATHER_API_KEY=495899657d496ed7b81a52551a5d98ac
+   VITE_OPENWEATHER_API_KEY=Your API key
    ```
 
 3. **Start the development server**:
