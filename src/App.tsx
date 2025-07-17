@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sun, Cloud, Sparkles, Heart } from 'lucide-react';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
