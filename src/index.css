@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Leaflet popup customization */
+.weather-popup .leaflet-popup-content-wrapper {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700;
+}
+
+.weather-popup .leaflet-popup-content {
+  @apply m-0;
+}
+
+.weather-popup .leaflet-popup-tip {
+  @apply bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700;
+}
+
+/* Custom scrollbar for map */
+.leaflet-control-container {
+  @apply text-gray-800 dark:text-gray-200;
+}
+
+.leaflet-control-zoom a {
+  @apply bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600;
+}
+
+.leaflet-control-zoom a:hover {
+  @apply bg-gray-50 dark:bg-gray-700;
+}

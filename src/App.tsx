@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Sun, Cloud, Sparkles, Heart } from 'lucide-react';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
+import WeatherMap from './components/WeatherMap';
+import MapToggle from './components/MapToggle';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import ThemeToggle from './components/ThemeToggle';
@@ -23,6 +25,7 @@ function App() {
 
   const { autoLocation } = useSettings();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   // Auto-fetch user's location weather on first load
   useEffect(() => {
@@ -31,6 +34,18 @@ function App() {
     }
   }, [autoLocation]);
 
+  const handleLocationSelect = async (lat: number, lon: number) => {
+    try {
+      const weatherService = (await import('./services/weatherService')).WeatherService.getInstance();
+      const { temperatureUnit } = (await import('./contexts/SettingsContext')).useSettings();
+      const data = await weatherService.getCurrentWeatherByCoords(lat, lon, temperatureUnit);
+      // Update weather state through the hook
+      fetchWeatherByCity(data.name);
+      setShowMap(false); // Switch back to details view
+    } catch (error) {
+      console.error('Failed to fetch weather for selected location:', error);
+    }
+  };
   const getBackgroundClass = () => {
     if (!weather) {
       return 'bg-gradient-to-br from-blue-300 via-purple-400 to-pink-400 dark:from-blue-800 dark:via-purple-900 dark:to-pink-900';
@@ -56,6 +71,7 @@ function App() {
       </div>
       
       {/* Theme Toggle and Settings */}
+      <MapToggle showMap={showMap} onToggle={() => setShowMap(!showMap)} />
       <ThemeToggle />
       <SettingsButton onClick={() => setSettingsOpen(true)} />
       
@@ -73,75 +89,87 @@ function App() {
             <Heart className="text-pink-300 animate-pulse" size={40} />
           </div>
           <p className="text-white/90 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
-            Discover beautiful weather conditions around the world ✨
+            Discover beautiful weather conditions around the world {showMap ? '🗺️' : '✨'}
           </p>
           <div className="flex items-center justify-center gap-2 mt-4">
             <Sparkles className="text-yellow-300" size={16} />
             <span className="text-white/80 text-sm font-medium">
-              Focusing on the bright side of weather
+              {showMap ? 'Explore weather on the interactive map' : 'Focusing on the bright side of weather'}
             </span>
             <Sparkles className="text-yellow-300" size={16} />
           </div>
         </div>
 
-        {/* Search Section */}
-        <div className="mb-12">
-          <SearchBar
-            onSearch={fetchWeatherByCity}
-            onUseCurrentLocation={fetchWeatherByLocation}
-            loading={loading}
-            error={error}
-          />
-        </div>
+        {!showMap && (
+          /* Search Section */
+          <div className="mb-12">
+            <SearchBar
+              onSearch={fetchWeatherByCity}
+              onUseCurrentLocation={fetchWeatherByLocation}
+              loading={loading}
+              error={error}
+            />
+          </div>
+        )}
 
         {/* Content */}
         <div className="max-w-6xl mx-auto">
-          {loading && (
-            <div className="flex flex-col items-center justify-center py-16">
-              <LoadingSpinner size={32} className="mb-6" />
-            </div>
-          )}
-
-          {error && (
-            <ErrorMessage 
-              message={error} 
-              onRetry={() => {
-                clearError();
-                if (weather) {
-                  fetchWeatherByCity(weather.name);
-                } else {
-                  fetchWeatherByLocation();
-                }
-              }}
+          {showMap ? (
+            <WeatherMap
+              currentWeather={weather}
+              onLocationSelect={handleLocationSelect}
+              className="mb-8"
             />
-          )}
-
-          {weather && !loading && !error && (
-            <WeatherCard weather={weather} />
-          )}
-
-          {!weather && !loading && !error && (
-            <div className="text-center py-16">
-              <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-12 max-w-2xl mx-auto border border-white/30">
-                <div className="flex items-center justify-center gap-4 mb-6">
-                  <Sun className="text-yellow-300 animate-pulse" size={64} />
-                  <Cloud className="text-white/80" size={48} />
+          ) : (
+            <>
+              {loading && (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <LoadingSpinner size={32} className="mb-6" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  Ready to Explore Pleasant Weather?
-                </h3>
-                <p className="text-white/90 text-lg font-medium max-w-lg mx-auto leading-relaxed mb-6">
-                  Search for any city or use your current location to discover beautiful weather conditions
-                </p>
-                <div className="flex items-center justify-center gap-2">
-                  <Sparkles className="text-yellow-300 animate-spin" size={16} />
-                  <span className="text-white/80 text-sm font-medium">
-                    Every day has its own beauty
-                  </span>
-                  <Sparkles className="text-yellow-300 animate-spin" size={16} />
+              )}
+
+              {error && (
+                <ErrorMessage 
+                  message={error} 
+                  onRetry={() => {
+                    clearError();
+                    if (weather) {
+                      fetchWeatherByCity(weather.name);
+                    } else {
+                      fetchWeatherByLocation();
+                    }
+                  }}
+                />
+              )}
+
+              {weather && !loading && !error && (
+                <WeatherCard weather={weather} />
+              )}
+
+              {!weather && !loading && !error && (
+                <div className="text-center py-16">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-12 max-w-2xl mx-auto border border-white/30">
+                    <div className="flex items-center justify-center gap-4 mb-6">
+                      <Sun className="text-yellow-300 animate-pulse" size={64} />
+                      <Cloud className="text-white/80" size={48} />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-4">
+                      Ready to Explore Pleasant Weather?
+                    </h3>
+                    <p className="text-white/90 text-lg font-medium max-w-lg mx-auto leading-relaxed mb-6">
+                      Search for any city or use your current location to discover beautiful weather conditions
+                    </p>
+                    <div className="flex items-center justify-center gap-2">
+                      <Sparkles className="text-yellow-300 animate-spin" size={16} />
+                      <span className="text-white/80 text-sm font-medium">
+                        Every day has its own beauty
+                      </span>
+                      <Sparkles className="text-yellow-300 animate-spin" size={16} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              )}
+            </>
           )}
         </div>
 
