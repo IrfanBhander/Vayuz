@@ -22,7 +22,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-blue-400 animate-pulse" 
         />
       </div>
-      <p className="text-gray-600 font-medium animate-pulse">
+      <p className="text-gray-600 dark:text-gray-300 font-medium animate-pulse">
         Getting your weather forecast...
       </p>
     </div>

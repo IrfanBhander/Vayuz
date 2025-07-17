@@ -4,7 +4,11 @@ import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
+import ThemeToggle from './components/ThemeToggle';
+import SettingsButton from './components/SettingsButton';
+import SettingsPanel from './components/SettingsPanel';
 import { useWeather } from './hooks/useWeather';
+import { useSettings } from './contexts/SettingsContext';
 import { getPleasantWeatherInfo } from './utils/weatherUtils';
 
 function App() {
@@ -12,25 +16,28 @@ function App() {
     weather,
     loading,
     error,
-    unit,
     fetchWeatherByCity,
     fetchWeatherByLocation,
-    toggleUnit,
     clearError
   } = useWeather();
 
+  const { autoLocation } = useSettings();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
   // Auto-fetch user's location weather on first load
   useEffect(() => {
-    fetchWeatherByLocation();
-  }, []);
+    if (autoLocation) {
+      fetchWeatherByLocation();
+    }
+  }, [autoLocation]);
 
   const getBackgroundClass = () => {
     if (!weather) {
-      return 'bg-gradient-to-br from-blue-300 via-purple-400 to-pink-400';
+      return 'bg-gradient-to-br from-blue-300 via-purple-400 to-pink-400 dark:from-blue-800 dark:via-purple-900 dark:to-pink-900';
     }
     
     const pleasantInfo = getPleasantWeatherInfo(weather);
-    return `bg-gradient-to-br ${pleasantInfo.bgGradient}`;
+    return `bg-gradient-to-br ${pleasantInfo.bgGradient} dark:from-gray-800 dark:via-gray-900 dark:to-black`;
   };
 
   return (
@@ -47,6 +54,10 @@ function App() {
         <Sun className="absolute bottom-32 left-32 text-yellow-300/40 animate-spin" size={28} />
         <Cloud className="absolute bottom-20 right-20 text-white/30 animate-bounce delay-1000" size={32} />
       </div>
+      
+      {/* Theme Toggle and Settings */}
+      <ThemeToggle />
+      <SettingsButton onClick={() => setSettingsOpen(true)} />
       
       <div className="container mx-auto px-6 py-12 relative z-10">
         {/* Pleasant Header */}
@@ -106,11 +117,7 @@ function App() {
           )}
 
           {weather && !loading && !error && (
-            <WeatherCard 
-              weather={weather} 
-              unit={unit} 
-              onToggleUnit={toggleUnit}
-            />
+            <WeatherCard weather={weather} />
           )}
 
           {!weather && !loading && !error && (
@@ -152,6 +159,12 @@ function App() {
           </p>
         </div>
       </div>
+      
+      {/* Settings Panel */}
+      <SettingsPanel 
+        isOpen={settingsOpen} 
+        onClose={() => setSettingsOpen(false)} 
+      />
     </div>
   );
 }

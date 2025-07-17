@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { WeatherData, TemperatureUnit } from '../types/weather';
+import { WeatherData } from '../types/weather';
 import { WeatherService } from '../services/weatherService';
+import { useSettings } from '../contexts/SettingsContext';
 
 export const useWeather = () => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [unit, setUnit] = useState<TemperatureUnit>('metric');
+  
+  const { temperatureUnit } = useSettings();
 
   const weatherService = WeatherService.getInstance();
 
@@ -15,7 +17,7 @@ export const useWeather = () => {
     setError(null);
     
     try {
-      const data = await weatherService.getCurrentWeather(city, unit);
+      const data = await weatherService.getCurrentWeather(city, temperatureUnit);
       setWeather(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Weather information is temporarily unavailable');
@@ -33,7 +35,7 @@ export const useWeather = () => {
       const data = await weatherService.getCurrentWeatherByCoords(
         location.lat, 
         location.lon, 
-        unit
+        temperatureUnit
       );
       setWeather(data);
     } catch (err) {
@@ -43,25 +45,19 @@ export const useWeather = () => {
     }
   };
 
-  const toggleUnit = () => {
-    setUnit(prev => prev === 'metric' ? 'imperial' : 'metric');
-  };
-
-  // Re-fetch weather when unit changes
+  // Re-fetch weather when temperature unit changes
   useEffect(() => {
     if (weather) {
       fetchWeatherByCity(weather.name);
     }
-  }, [unit]);
+  }, [temperatureUnit]);
 
   return {
     weather,
     loading,
     error,
-    unit,
     fetchWeatherByCity,
     fetchWeatherByLocation,
-    toggleUnit,
     clearError: () => setError(null)
   };
 };
