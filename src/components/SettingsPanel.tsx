@@ -23,10 +23,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
   const {
     theme,
     temperatureUnit,
+    language,
     notifications,
     autoLocation,
     setTheme,
     setTemperatureUnit,
+    setLanguage,
     setNotifications,
     setAutoLocation,
     resetSettings,
@@ -43,6 +45,11 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
   const temperatureOptions: { value: TemperatureUnit; label: string }[] = [
     { value: 'metric', label: 'Celsius (°C)' },
     { value: 'imperial', label: 'Fahrenheit (°F)' },
+  ];
+
+  const languageOptions: { value: Language; label: string; flag: string }[] = [
+    { value: 'en', label: 'English', flag: '🇺🇸' },
+    { value: 'bn', label: 'বাংলা', flag: '🇧🇩' },
   ];
 
   const handleReset = () => {
@@ -130,6 +137,33 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
                   <span className="font-medium">{option.label}</span>
                   {temperatureUnit === option.value && (
                     <Sparkles className="ml-auto text-red-500 animate-pulse" size={16} />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Language Settings */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+              <Globe className="text-green-500" size={20} />
+              Language
+            </h3>
+            <div className="space-y-3">
+              {languageOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setLanguage(option.value)}
+                  className={`w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-200 hover:scale-[1.02] ${
+                    language === option.value
+                      ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                      : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-green-300'
+                  }`}
+                >
+                  <span className="text-2xl">{option.flag}</span>
+                  <span className="font-medium">{option.label}</span>
+                  {language === option.value && (
+                    <Sparkles className="ml-auto text-green-500 animate-pulse" size={16} />
                   )}
                 </button>
               ))}
