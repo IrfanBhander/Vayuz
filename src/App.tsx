@@ -23,7 +23,7 @@ function App() {
     clearError
   } = useWeather();
 
-  const { autoLocation } = useSettings();
+  const { autoLocation, temperatureUnit } = useSettings();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
 
@@ -37,7 +37,6 @@ function App() {
   const handleLocationSelect = async (lat: number, lon: number) => {
     try {
       const weatherService = (await import('./services/weatherService')).WeatherService.getInstance();
-      const { temperatureUnit } = (await import('./contexts/SettingsContext')).useSettings();
       const data = await weatherService.getCurrentWeatherByCoords(lat, lon, temperatureUnit);
       // Update weather state through the hook
       fetchWeatherByCity(data.name);
