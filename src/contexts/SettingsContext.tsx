@@ -2,17 +2,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Theme = 'light' | 'dark' | 'auto';
 export type TemperatureUnit = 'metric' | 'imperial';
-export type Language = 'en' | 'es' | 'fr' | 'de';
 
 interface SettingsContextType {
   theme: Theme;
   temperatureUnit: TemperatureUnit;
-  language: Language;
   notifications: boolean;
   autoLocation: boolean;
   setTheme: (theme: Theme) => void;
   setTemperatureUnit: (unit: TemperatureUnit) => void;
-  setLanguage: (language: Language) => void;
   setNotifications: (enabled: boolean) => void;
   setAutoLocation: (enabled: boolean) => void;
   resetSettings: () => void;
@@ -21,7 +18,6 @@ interface SettingsContextType {
 const defaultSettings = {
   theme: 'light' as Theme,
   temperatureUnit: 'metric' as TemperatureUnit,
-  language: 'en' as Language,
   notifications: true,
   autoLocation: true,
 };
@@ -49,11 +45,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
   const [temperatureUnit, setTemperatureUnitState] = useState<TemperatureUnit>(() => {
     const saved = localStorage.getItem('weather-app-temperature-unit');
     return (saved as TemperatureUnit) || defaultSettings.temperatureUnit;
-  });
-
-  const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem('weather-app-language');
-    return (saved as Language) || defaultSettings.language;
   });
 
   const [notifications, setNotificationsState] = useState<boolean>(() => {
@@ -96,11 +87,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
     localStorage.setItem('weather-app-temperature-unit', unit);
   };
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    localStorage.setItem('weather-app-language', lang);
-  };
-
   const setNotifications = (enabled: boolean) => {
     setNotificationsState(enabled);
     localStorage.setItem('weather-app-notifications', JSON.stringify(enabled));
@@ -114,14 +100,12 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
   const resetSettings = () => {
     setTheme(defaultSettings.theme);
     setTemperatureUnit(defaultSettings.temperatureUnit);
-    setLanguage(defaultSettings.language);
     setNotifications(defaultSettings.notifications);
     setAutoLocation(defaultSettings.autoLocation);
     
     // Clear localStorage
     localStorage.removeItem('weather-app-theme');
     localStorage.removeItem('weather-app-temperature-unit');
-    localStorage.removeItem('weather-app-language');
     localStorage.removeItem('weather-app-notifications');
     localStorage.removeItem('weather-app-auto-location');
   };
@@ -131,12 +115,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
       value={{
         theme,
         temperatureUnit,
-        language,
         notifications,
         autoLocation,
         setTheme,
         setTemperatureUnit,
-        setLanguage,
         setNotifications,
         setAutoLocation,
         resetSettings,
