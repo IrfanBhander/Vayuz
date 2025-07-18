@@ -45,6 +45,23 @@ const MapClickHandler: React.FC<{ onLocationSelect: (lat: number, lon: number) =
     },
   });
   return null;
+};
+
+const WeatherMap: React.FC<WeatherMapProps> = ({ 
+  currentWeather, 
+  onLocationSelect, 
+  className = '' 
+}) => {
+  const [mapWeatherData, setMapWeatherData] = useState<WeatherData[]>([]);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [mapLayer, setMapLayer] = useState<'street' | 'satellite' | 'terrain'>('street');
+  const [showWeatherLayer, setShowWeatherLayer] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [recentLocations, setRecentLocations] = useState<Array<{name: string, lat: number, lon: number}>>([]);
+  const { temperatureUnit } = useSettings();
+
   // Load recent locations from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('weather-map-recent-locations');
@@ -165,23 +182,6 @@ const MapClickHandler: React.FC<{ onLocationSelect: (lat: number, lon: number) =
         return '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
     }
   };
-
-};
-
-const WeatherMap: React.FC<WeatherMapProps> = ({ 
-  currentWeather, 
-  onLocationSelect, 
-  className = '' 
-}) => {
-  const [mapWeatherData, setMapWeatherData] = useState<WeatherData[]>([]);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [mapLayer, setMapLayer] = useState<'street' | 'satellite' | 'terrain'>('street');
-  const [showWeatherLayer, setShowWeatherLayer] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [recentLocations, setRecentLocations] = useState<Array<{name: string, lat: number, lon: number}>>([]);
-  const { temperatureUnit } = useSettings();
 
   // Get user's current location
   useEffect(() => {
@@ -509,143 +509,6 @@ const WeatherMap: React.FC<WeatherMapProps> = ({
               <span>Weather Location</span>
             </div>
             <span>• Search, click, or use current location</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default WeatherMap;
-            <MapPin className="animate-pulse" size={24} />
-            <h3 className="text-xl font-bold">Interactive Weather Map</h3>
-          </div>
-          <p className="text-white/90 text-sm mt-1">
-            {userLocation ? 'Your location detected! ' : ''}Click anywhere on the map to get weather information
-          </p>
-        </div>
-
-        {/* Map Container */}
-        <div className="h-96 relative">
-          <MapContainer
-            center={[mapCenter.lat, mapCenter.lng]}
-            zoom={10}
-            style={{ height: '100%', width: '100%' }}
-            className="z-10"
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            
-            {/* Click handler for map */}
-            <MapClickHandler onLocationSelect={onLocationSelect} />
-            
-            {/* User's current location marker */}
-            {userLocation && (
-              <Marker 
-                position={[userLocation.lat, userLocation.lon]}
-                icon={new Icon({
-                  iconUrl: `data:image/svg+xml;base64,${btoa(`
-                    <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="15" cy="15" r="12" fill="#EF4444" stroke="#DC2626" stroke-width="2"/>
-                      <circle cx="15" cy="15" r="6" fill="white"/>
-                      <circle cx="15" cy="15" r="3" fill="#EF4444"/>
-                    </svg>
-                  `)}`,
-                  iconSize: [30, 30],
-                  iconAnchor: [15, 15],
-                  popupAnchor: [0, -15],
-                })}
-              >
-                <Popup className="weather-popup">
-                  <div className="p-2 text-center">
-                    <div className="flex items-center gap-2 mb-2">
-                      <MapPin size={16} className="text-red-500" />
-                      <span className="font-semibold text-gray-800 dark:text-white">Your Location</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      Lat: {userLocation.lat.toFixed(4)}<br/>
-                      Lon: {userLocation.lon.toFixed(4)}
-                    </p>
-                  </div>
-                </Popup>
-              </Marker>
-            )}
-
-            {/* Current weather location marker */}
-            {currentWeather && (
-              <Marker 
-                position={[currentWeather.coord.lat, currentWeather.coord.lon]}
-                icon={createWeatherIcon(currentWeather.main.temp)}
-              >
-                <Popup className="weather-popup">
-                  <div className="p-3 min-w-[200px]">
-                    <h4 className="font-bold text-gray-800 dark:text-white mb-2 flex items-center gap-2">
-                      <MapPin size={16} className="text-blue-500" />
-                      {currentWeather.name}, {currentWeather.sys.country}
-                    </h4>
-                    
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Thermometer size={14} className="text-red-500" />
-                        <span className="text-gray-700 dark:text-gray-300">
-                          {Math.round(currentWeather.main.temp)}° 
-                          {temperatureUnit === 'metric' ? 'C' : 'F'}
-                        </span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Droplets size={14} className="text-blue-500" />
-                        <span className="text-gray-700 dark:text-gray-300">
-                          {currentWeather.main.humidity}% humidity
-                        </span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Wind size={14} className="text-green-500" />
-                        <span className="text-gray-700 dark:text-gray-300">
-                          {currentWeather.wind.speed} {temperatureUnit === 'metric' ? 'm/s' : 'mph'}
-                        </span>
-                      </div>
-                      
-                      <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
-                        <span className="text-gray-600 dark:text-gray-400 capitalize">
-                          {currentWeather.weather[0].description}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
-            )}
-          </MapContainer>
-
-          {/* Loading overlay */}
-          {loading && (
-            <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-20">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg">
-                <div className="flex items-center gap-3">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-                  <span className="text-gray-700 dark:text-gray-300">Loading weather...</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Map Instructions */}
-        <div className="bg-gray-50 dark:bg-gray-700 p-4 border-t border-gray-200 dark:border-gray-600">
-          <div className="flex items-center justify-center text-sm text-gray-600 dark:text-gray-300 space-x-4">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <span>Your Location</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span>Weather Location</span>
-            </div>
-            <span>• Click anywhere to get weather</span>
           </div>
         </div>
       </div>
