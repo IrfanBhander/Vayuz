@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Cloud, Sparkles, Heart } from 'lucide-react';
+import { Cloud, Sparkles, Heart, Sun } from 'lucide-react';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import WeatherMap from './components/WeatherMap';
