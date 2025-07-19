@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Clock, X, Sparkles } from 'lucide-react';
+import { useSettings } from '../contexts/SettingsContext';
+import { useTranslation } from '../utils/translations';
 
 interface SearchBarProps {
   onSearch: (city: string) => void;
@@ -14,6 +16,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   loading, 
   error 
 }) => {
+  const { language } = useSettings();
+  const t = useTranslation(language);
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [showRecent, setShowRecent] = useState(false);
@@ -56,7 +60,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setShowRecent(true)}
-            placeholder="Discover weather in your favorite places..."
+            placeholder={t.searchPlaceholder}
             className="w-full px-6 py-5 pl-16 pr-32 bg-transparent rounded-2xl text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all duration-300 text-lg font-medium"
             disabled={loading}
           />
@@ -69,7 +73,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               onClick={onUseCurrentLocation}
               disabled={loading}
               className="p-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl transition-all duration-200 disabled:opacity-50 hover:scale-110 group"
-              title="Use current location"
+             title={t.useCurrentLocation}
             >
               <MapPin size={20} className="group-hover:animate-pulse" />
             </button>
@@ -91,7 +95,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30">
             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
               <Clock size={16} className="text-blue-500" />
-              Recent Searches
+              {t.recentSearches}
             </span>
             <button
               onClick={clearRecentSearches}

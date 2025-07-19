@@ -13,6 +13,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useSettings, Theme, TemperatureUnit, Language } from '../contexts/SettingsContext';
+import { useTranslation } from '../utils/translations';
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -33,18 +34,20 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
     setAutoLocation,
     resetSettings,
   } = useSettings();
+  
+  const t = useTranslation(language);
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const themeOptions: { value: Theme; label: string; icon: React.ReactNode }[] = [
-    { value: 'light', label: 'Light Mode', icon: <Sun size={20} className="text-yellow-500" /> },
-    { value: 'dark', label: 'Dark Mode', icon: <Moon size={20} className="text-blue-400" /> },
-    { value: 'auto', label: 'Auto (System)', icon: <Monitor size={20} className="text-gray-500" /> },
+    { value: 'light', label: t.lightMode, icon: <Sun size={20} className="text-yellow-500" /> },
+    { value: 'dark', label: t.darkMode, icon: <Moon size={20} className="text-blue-400" /> },
+    { value: 'auto', label: t.autoMode, icon: <Monitor size={20} className="text-gray-500" /> },
   ];
 
   const temperatureOptions: { value: TemperatureUnit; label: string }[] = [
-    { value: 'metric', label: 'Celsius (°C)' },
-    { value: 'imperial', label: 'Fahrenheit (°F)' },
+    { value: 'metric', label: t.celsius },
+    { value: 'imperial', label: t.fahrenheit },
   ];
 
   const languageOptions: { value: Language; label: string; flag: string }[] = [
@@ -74,7 +77,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Settings className="animate-spin" size={24} />
-              <h2 className="text-xl font-bold">Settings</h2>
+              <h2 className="text-xl font-bold">{t.settings}</h2>
               <Sparkles className="text-yellow-300 animate-pulse" size={20} />
             </div>
             <button
@@ -85,6 +88,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
             </button>
           </div>
           <p className="text-white/90 mt-2">Customize your weather experience</p>
+          <p className="text-white/90 mt-2">{t.settings}</p>
         </div>
 
         {/* Settings Content */}
@@ -93,7 +97,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
               <Sun className="text-yellow-500" size={20} />
-              Appearance
+              {t.appearance}
             </h3>
             <div className="space-y-3">
               {themeOptions.map((option) => (
@@ -120,7 +124,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
               <Thermometer className="text-red-500" size={20} />
-              Temperature Unit
+              {t.temperatureUnit}
             </h3>
             <div className="space-y-3">
               {temperatureOptions.map((option) => (
@@ -147,7 +151,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
               <Globe className="text-green-500" size={20} />
-              Language
+              {t.language}
             </h3>
             <div className="space-y-3">
               {languageOptions.map((option) => (
@@ -177,8 +181,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
               <div className="flex items-center gap-3">
                 <Bell className="text-purple-500" size={20} />
                 <div>
-                  <h4 className="font-medium text-gray-800 dark:text-white">Notifications</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Get weather alerts</p>
+                  <h4 className="font-medium text-gray-800 dark:text-white">{t.notifications}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t.getWeatherAlerts}</p>
                 </div>
               </div>
               <button
@@ -200,8 +204,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
               <div className="flex items-center gap-3">
                 <MapPin className="text-orange-500" size={20} />
                 <div>
-                  <h4 className="font-medium text-gray-800 dark:text-white">Auto Location</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Use current location</p>
+                  <h4 className="font-medium text-gray-800 dark:text-white">{t.autoLocation}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t.useCurrentLocationDesc}</p>
                 </div>
               </div>
               <button
@@ -227,25 +231,25 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
                 className="w-full flex items-center justify-center gap-3 p-4 bg-gray-100 dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/30 text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 rounded-xl transition-all duration-200 hover:scale-[1.02]"
               >
                 <RotateCcw size={20} />
-                Reset to Defaults
+                {t.resetToDefaults}
               </button>
             ) : (
               <div className="space-y-3">
                 <p className="text-center text-gray-600 dark:text-gray-400 font-medium">
-                  Reset all settings to default values?
+                  {t.resetConfirm}
                 </p>
                 <div className="flex gap-3">
                   <button
                     onClick={() => setShowResetConfirm(false)}
                     className="flex-1 p-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
                   >
-                    Cancel
+                    {t.cancel}
                   </button>
                   <button
                     onClick={handleReset}
                     className="flex-1 p-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors duration-200"
                   >
-                    Reset
+                    {t.reset}
                   </button>
                 </div>
               </div>

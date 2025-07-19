@@ -1,5 +1,7 @@
 import React from 'react';
 import { Sun, Cloud } from 'lucide-react';
+import { useSettings } from '../contexts/SettingsContext';
+import { useTranslation } from '../utils/translations';
 
 interface LoadingSpinnerProps {
   size?: number;
@@ -10,6 +12,9 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 24, 
   className = '' 
 }) => {
+  const { language } = useSettings();
+  const t = useTranslation(language);
+
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <div className="relative mb-4">
@@ -23,7 +28,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         />
       </div>
       <p className="text-gray-600 dark:text-gray-300 font-medium animate-pulse">
-        Getting your weather forecast...
+        {t.gettingWeather}
       </p>
     </div>
   );

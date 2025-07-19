@@ -3,6 +3,7 @@ import { WeatherData } from '../types/weather';
 import WeatherIcon from './WeatherIcon';
 import { getPleasantWeatherInfo, getTemperatureFeeling, getComfortLevel, getWindDescription } from '../utils/weatherUtils';
 import { useSettings } from '../contexts/SettingsContext';
+import { useTranslation } from '../utils/translations';
 import { 
   Thermometer, 
   Droplets, 
@@ -20,11 +21,12 @@ interface WeatherCardProps {
 }
 
 const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
-  const { temperatureUnit, setTemperatureUnit } = useSettings();
-  const pleasantInfo = getPleasantWeatherInfo(weather);
-  const temperatureFeeling = getTemperatureFeeling(weather.main.temp, temperatureUnit);
-  const comfortLevel = getComfortLevel(weather.main.humidity, weather.main.temp);
-  const windDescription = getWindDescription(weather.wind.speed, temperatureUnit);
+  const { temperatureUnit, setTemperatureUnit, language } = useSettings();
+  const t = useTranslation(language);
+  const pleasantInfo = getPleasantWeatherInfo(weather, language);
+  const temperatureFeeling = getTemperatureFeeling(weather.main.temp, temperatureUnit, language);
+  const comfortLevel = getComfortLevel(weather.main.humidity, weather.main.temp, language);
+  const windDescription = getWindDescription(weather.wind.speed, temperatureUnit, language);
 
   const formatTime = (timestamp: number) => {
     return new Date(timestamp * 1000).toLocaleTimeString([], { 
@@ -90,7 +92,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
           <div className="text-right">
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
               <Thermometer size={20} className="text-red-400" />
-              <span className="text-sm font-medium">Feels like</span>
+              <span className="text-sm font-medium">{t.feelsLike}</span>
             </div>
             <span className="text-2xl font-semibold text-gray-800 dark:text-white">
               {Math.round(weather.main.feels_like)}{getUnitSymbol()}
@@ -107,7 +109,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl p-5 border border-blue-200 dark:border-blue-700/50 hover:shadow-lg transition-all duration-300 hover:scale-105">
           <div className="flex items-center gap-3 text-blue-600 mb-3">
             <Droplets size={24} className="text-blue-500" />
-            <span className="text-sm font-semibold">Humidity</span>
+            <span className="text-sm font-semibold">{t.humidity}</span>
           </div>
           <span className="text-2xl font-bold text-gray-800 dark:text-white block mb-1">
             {weather.main.humidity}%
@@ -118,7 +120,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
         <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-2xl p-5 border border-green-200 dark:border-green-700/50 hover:shadow-lg transition-all duration-300 hover:scale-105">
           <div className="flex items-center gap-3 text-green-600 mb-3">
             <Wind size={24} className="text-green-500" />
-            <span className="text-sm font-semibold">Wind</span>
+            <span className="text-sm font-semibold">{t.wind}</span>
           </div>
           <span className="text-2xl font-bold text-gray-800 dark:text-white block mb-1">
             {weather.wind.speed} {getSpeedUnit()}
@@ -129,7 +131,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
         <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded-2xl p-5 border border-purple-200 dark:border-purple-700/50 hover:shadow-lg transition-all duration-300 hover:scale-105">
           <div className="flex items-center gap-3 text-purple-600 mb-3">
             <Gauge size={24} className="text-purple-500" />
-            <span className="text-sm font-semibold">Pressure</span>
+            <span className="text-sm font-semibold">{t.pressure}</span>
           </div>
           <span className="text-2xl font-bold text-gray-800 dark:text-white block mb-1">
             {weather.main.pressure}
@@ -140,7 +142,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
         <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 rounded-2xl p-5 border border-orange-200 dark:border-orange-700/50 hover:shadow-lg transition-all duration-300 hover:scale-105">
           <div className="flex items-center gap-3 text-orange-600 mb-3">
             <Eye size={24} className="text-orange-500" />
-            <span className="text-sm font-semibold">Visibility</span>
+            <span className="text-sm font-semibold">{t.visibility}</span>
           </div>
           <span className="text-2xl font-bold text-gray-800 dark:text-white block mb-1">
             {(weather.visibility / 1000).toFixed(1)}
@@ -156,7 +158,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
             <div className="flex items-center gap-3">
               <Sunrise size={24} className="text-yellow-500" />
               <div>
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Sunrise</span>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{t.sunrise}</span>
                 <span className="text-xl font-bold text-gray-800 dark:text-white ml-3">
                   {formatTime(weather.sys.sunrise)}
                 </span>
@@ -167,7 +169,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
             <div className="flex items-center gap-3">
               <Sunset size={24} className="text-orange-500" />
               <div>
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Sunset</span>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{t.sunset}</span>
                 <span className="text-xl font-bold text-gray-800 dark:text-white ml-3">
                   {formatTime(weather.sys.sunset)}
                 </span>
@@ -177,7 +179,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
         </div>
         <div className="mt-4 text-center">
           <p className="text-gray-600 dark:text-gray-300 font-medium">
-            Perfect time to enjoy the beautiful outdoors! ☀️
+            {t.perfectTimeOutdoors}
           </p>
         </div>
       </div>

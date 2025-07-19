@@ -12,6 +12,7 @@ import SettingsPanel from './components/SettingsPanel';
 import { useWeather } from './hooks/useWeather';
 import { useSettings } from './contexts/SettingsContext';
 import { getPleasantWeatherInfo } from './utils/weatherUtils';
+import { useTranslation } from './utils/translations';
 
 function App() {
   const {
@@ -23,7 +24,8 @@ function App() {
     clearError
   } = useWeather();
 
-  const { autoLocation, temperatureUnit } = useSettings();
+  const { autoLocation, temperatureUnit, language } = useSettings();
+  const t = useTranslation(language);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
 
@@ -50,7 +52,7 @@ function App() {
       return 'bg-gradient-to-br from-blue-300 via-purple-400 to-pink-400 dark:from-blue-800 dark:via-purple-900 dark:to-pink-900';
     }
     
-    const pleasantInfo = getPleasantWeatherInfo(weather);
+    const pleasantInfo = getPleasantWeatherInfo(weather, language);
     return `bg-gradient-to-br ${pleasantInfo.bgGradient} dark:from-gray-800 dark:via-gray-900 dark:to-black`;
   };
 
@@ -83,17 +85,17 @@ function App() {
               <Sparkles className="absolute -top-2 -right-2 text-yellow-300 animate-pulse" size={20} />
             </div>
             <h1 className="text-5xl font-bold text-white tracking-tight">
-              Pleasant Weather
+              {t.appTitle}
             </h1>
             <Heart className="text-pink-300 animate-pulse" size={40} />
           </div>
           <p className="text-white/90 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
-            Discover beautiful weather conditions around the world {showMap ? '🗺️' : '✨'}
+            {t.appSubtitle} {showMap ? '🗺️' : '✨'}
           </p>
           <div className="flex items-center justify-center gap-2 mt-4">
             <Sparkles className="text-yellow-300" size={16} />
             <span className="text-white/80 text-sm font-medium">
-              {showMap ? 'Explore weather on the interactive map' : 'Focusing on the bright side of weather'}
+              {showMap ? t.interactiveWeatherMap : t.appDescription}
             </span>
             <Sparkles className="text-yellow-300" size={16} />
           </div>
@@ -153,15 +155,15 @@ function App() {
                       <Cloud className="text-white/80" size={48} />
                     </div>
                     <h3 className="text-2xl font-bold text-white mb-4">
-                      Ready to Explore Pleasant Weather?
+                      {t.readyToExplore}
                     </h3>
                     <p className="text-white/90 text-lg font-medium max-w-lg mx-auto leading-relaxed mb-6">
-                      Search for any city or use your current location to discover beautiful weather conditions
+                      {t.searchOrUseLocation}
                     </p>
                     <div className="flex items-center justify-center gap-2">
                       <Sparkles className="text-yellow-300 animate-spin" size={16} />
                       <span className="text-white/80 text-sm font-medium">
-                        Every day has its own beauty
+                        {t.everyDayBeauty}
                       </span>
                       <Sparkles className="text-yellow-300 animate-spin" size={16} />
                     </div>
@@ -177,12 +179,12 @@ function App() {
           <div className="flex items-center justify-center gap-2 mb-2">
             <Heart className="text-pink-300" size={16} />
             <p className="text-sm font-medium">
-              Bringing you the bright side of weather
+              {t.brightSideWeather}
             </p>
             <Heart className="text-pink-300" size={16} />
           </div>
           <p className="text-xs">
-            Weather data by OpenWeatherMap | Designed with ☀️ and optimism
+            {t.weatherDataBy} | {t.designedWith}
           </p>
         </div>
       </div>
