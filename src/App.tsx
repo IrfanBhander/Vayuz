@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Sun, Cloud, Sparkles, Heart } from 'lucide-react';
+import { Cloud, Sparkles, Heart } from 'lucide-react';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import WeatherMap from './components/WeatherMap';
@@ -9,6 +9,7 @@ import ErrorMessage from './components/ErrorMessage';
 import ThemeToggle from './components/ThemeToggle';
 import SettingsButton from './components/SettingsButton';
 import SettingsPanel from './components/SettingsPanel';
+import CloudyIcon from './components/CloudyIcon';
 import { useWeather } from './hooks/useWeather';
 import { useSettings } from './contexts/SettingsContext';
 import { getPleasantWeatherInfo } from './utils/weatherUtils';
@@ -81,7 +82,7 @@ function App() {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="relative">
-              <Sun className="text-white animate-spin" size={56} />
+              <CloudyIcon size={56} className="text-white animate-pulse" />
               <Sparkles className="absolute -top-2 -right-2 text-yellow-300 animate-pulse" size={20} />
             </div>
             <h1 className="text-5xl font-bold text-white tracking-tight">
