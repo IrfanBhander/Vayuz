@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Cloud, Sparkles, Heart, Sun } from 'lucide-react';
+import { AuthProvider } from './contexts/AuthContext';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import WeatherMap from './components/WeatherMap';
@@ -10,6 +11,8 @@ import ThemeToggle from './components/ThemeToggle';
 import SettingsButton from './components/SettingsButton';
 import SettingsPanel from './components/SettingsPanel';
 import CloudyIcon from './components/CloudyIcon';
+import AuthButton from './components/auth/AuthButton';
+import AuthModal from './components/auth/AuthModal';
 import { useWeather } from './hooks/useWeather';
 import { useSettings } from './contexts/SettingsContext';
 import { getPleasantWeatherInfo } from './utils/weatherUtils';
@@ -29,6 +32,7 @@ function App() {
   const t = useTranslation(language);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   // Auto-fetch user's location weather on first load
   useEffect(() => {
@@ -75,6 +79,7 @@ function App() {
       {/* Theme Toggle and Settings */}
       <MapToggle showMap={showMap} onToggle={() => setShowMap(!showMap)} />
       <ThemeToggle />
+      <AuthButton onOpenAuth={() => setAuthModalOpen(true)} />
       <SettingsButton onClick={() => setSettingsOpen(true)} />
       
       <div className="container mx-auto px-6 py-12 relative z-10">
@@ -195,8 +200,12 @@ function App() {
         isOpen={settingsOpen} 
         onClose={() => setSettingsOpen(false)} 
       />
+      
+      {/* Authentication Modal */}
+      <AuthModal 
+        isOpen={authModalOpen} 
+        onClose={() => setAuthModalOpen(false)} 
+      />
     </div>
   );
 }
-
-export default App;
