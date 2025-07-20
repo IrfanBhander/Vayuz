@@ -1,6 +1,6 @@
 # Pleasant Weather App
 
-A beautiful, optimistic weather application that focuses on presenting weather information in a positive, user-friendly way. Built with React, TypeScript, and Tailwind CSS.
+A beautiful, optimistic weather application with secure user authentication that focuses on presenting weather information in a positive, user-friendly way. Built with React, TypeScript, Tailwind CSS, and Node.js.
 
 ## 🌟 Key Features
 
@@ -18,6 +18,14 @@ A beautiful, optimistic weather application that focuses on presenting weather i
 - 📱 **Responsive Design**: Optimized for all device sizes
 - 💾 **Recent Searches**: Quick access to previously searched locations
 
+### 🔐 Secure Authentication System
+- **User Registration**: Secure account creation with email verification
+- **Login/Logout**: JWT-based authentication with session management
+- **Password Reset**: Secure password recovery via email
+- **Two-Factor Authentication**: Optional 2FA with TOTP support
+- **Account Security**: Rate limiting, account lockout, and security monitoring
+- **Remember Me**: Secure persistent sessions
+
 ### Design Philosophy
 - **Light & Bright**: Clean, optimistic visual design with pleasant color schemes
 - **Weather-Adaptive Backgrounds**: Beautiful gradients that change based on weather conditions
@@ -29,10 +37,21 @@ A beautiful, optimistic weather application that focuses on presenting weather i
 
 ### Architecture
 - **React 18** with TypeScript for type safety
+- **Node.js/Express** backend with comprehensive security
 - **Custom Hooks** for weather data management
 - **Context Pattern** for state management
 - **Service Layer** for API interactions
 - **Utility Functions** for pleasant weather interpretation
+
+### Security Features
+- **Password Hashing**: bcrypt with configurable rounds
+- **JWT Authentication**: Secure token-based authentication
+- **Rate Limiting**: Protection against brute force attacks
+- **Input Validation**: Comprehensive validation and sanitization
+- **CSRF Protection**: Cross-site request forgery prevention
+- **Session Security**: Secure HTTP-only cookies
+- **Account Lockout**: Automatic lockout after failed attempts
+- **Email Verification**: Required email verification for new accounts
 
 ### Weather Data Processing
 - **Pleasant Weather Mapping**: Transforms raw weather data into positive descriptions
@@ -51,26 +70,93 @@ A beautiful, optimistic weather application that focuses on presenting weather i
 ### Prerequisites
 - Node.js (version 16 or higher)
 - npm or yarn package manager
+- SMTP server access for email functionality (Gmail recommended)
 
 ### Installation
 
 1. **Install dependencies**:
    ```bash
+   # Frontend dependencies
    npm install
+   
+   # Backend dependencies
+   cd server
+   npm install
+   cd ..
    ```
 
-2. **Environment Setup**:
-   The API key is pre-configured in the `.env` file:
+2. **Frontend Environment Setup**:
+   The weather API key is pre-configured in the `.env` file:
    ```
    VITE_OPENWEATHER_API_KEY=Your API key
    ```
 
-3. **Start the development server**:
+3. **Backend Environment Setup**:
+   Copy the example environment file and configure:
+   ```bash
+   cd server
+   cp .env.example .env
+   ```
+   
+   Edit `server/.env` with your configuration:
+   ```
+   # Security Keys (CHANGE THESE!)
+   JWT_SECRET=your-super-secret-jwt-key-change-in-production
+   SESSION_SECRET=your-super-secret-session-key-change-in-production
+   
+   # Email Configuration
+   SMTP_USER=your-email@gmail.com
+   SMTP_PASS=your-app-password
+   ```
+
+4. **Start the development servers**:
+   
+   Backend server:
+   ```bash
+   cd server
+   npm run dev
+   ```
+   
+   Frontend server (in a new terminal):
    ```bash
    npm run dev
    ```
 
-4. **Open your browser** and navigate to `http://localhost:5173`
+5. **Open your browser** and navigate to `http://localhost:5173`
+
+## 🔧 Authentication Setup
+
+### Email Configuration
+
+For email functionality (verification, password reset), configure SMTP settings:
+
+**Gmail Setup:**
+1. Enable 2-factor authentication on your Gmail account
+2. Generate an App Password: Google Account → Security → App passwords
+3. Use your Gmail address and the generated app password in `.env`
+
+**Other SMTP Providers:**
+Update the SMTP settings in `server/.env`:
+```
+SMTP_HOST=your-smtp-host
+SMTP_PORT=587
+SMTP_USER=your-username
+SMTP_PASS=your-password
+```
+
+### Security Configuration
+
+**Production Deployment:**
+- Generate strong, unique secrets for JWT_SECRET and SESSION_SECRET
+- Use environment variables for all sensitive configuration
+- Enable HTTPS in production
+- Configure proper CORS settings
+- Set up proper database backups
+
+**Development:**
+- Default settings work for local development
+- SQLite database is created automatically
+- Email verification links work with localhost
 
 ## 🎨 Design Features
 
@@ -116,28 +202,92 @@ A beautiful, optimistic weather application that focuses on presenting weather i
 
 ## 🔧 Build for Production
 
+### Frontend
 ```bash
 npm run build
 ```
 
 The optimized build will be created in the `dist` directory.
 
+### Backend
+```bash
+cd server
+npm run build
+npm start
+```
+
+## 🧪 Testing
+
+### Backend Tests
+```bash
+cd server
+npm test
+```
+
+### Test Coverage
+```bash
+cd server
+npm run test:coverage
+```
+
+## 📚 API Documentation
+
+### Authentication Endpoints
+
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `GET /api/auth/verify-email` - Verify email address
+- `POST /api/auth/forgot-password` - Initiate password reset
+- `POST /api/auth/reset-password` - Reset password with token
+- `GET /api/auth/me` - Get current user info
+- `POST /api/auth/setup-2fa` - Setup two-factor authentication
+- `POST /api/auth/enable-2fa` - Enable two-factor authentication
+- `POST /api/auth/disable-2fa` - Disable two-factor authentication
+
+### Security Features
+
+- **Rate Limiting**: 5 attempts per 15 minutes per IP/email
+- **Account Lockout**: 5 failed attempts locks account for 30 minutes
+- **Password Requirements**: 8+ chars, uppercase, lowercase, number, special char
+- **JWT Expiration**: 24 hours (configurable)
+- **Session Security**: HTTP-only cookies with secure flags
+
 ## 🌟 Key Benefits
 
 1. **Positive User Experience**: Focuses on the pleasant aspects of weather
-2. **Stress-Free Interface**: Avoids alarming weather warnings and harsh presentations
-3. **Beautiful Design**: Visually appealing with weather-adaptive backgrounds
-4. **Reliable Performance**: Fast, responsive, and dependable across all devices
-5. **User-Friendly**: Intuitive interface that anyone can use comfortably
+2. **Secure Authentication**: Enterprise-grade security features
+3. **Stress-Free Interface**: Avoids alarming weather warnings and harsh presentations
+4. **Beautiful Design**: Visually appealing with weather-adaptive backgrounds
+5. **Reliable Performance**: Fast, responsive, and dependable across all devices
+6. **User-Friendly**: Intuitive interface that anyone can use comfortably
 
 ## 🤝 Contributing
 
-We welcome contributions that maintain the pleasant, optimistic nature of the application:
+We welcome contributions that maintain the pleasant, optimistic nature and security standards of the application:
 
 1. Fork the repository
 2. Create a feature branch
-3. Ensure changes align with the pleasant weather philosophy
-4. Submit a pull request
+3. Ensure changes align with the pleasant weather philosophy and security best practices
+4. Add tests for new functionality
+5. Submit a pull request
+
+## 🔒 Security
+
+This application implements security best practices:
+
+- **Input Validation**: All user inputs are validated and sanitized
+- **SQL Injection Prevention**: Parameterized queries and ORM usage
+- **XSS Protection**: Content Security Policy and input sanitization
+- **CSRF Protection**: CSRF tokens for state-changing operations
+- **Rate Limiting**: Protection against brute force and DoS attacks
+- **Secure Headers**: Helmet.js for security headers
+- **Password Security**: bcrypt hashing with salt rounds
+- **Session Security**: Secure, HTTP-only cookies
+
+### Reporting Security Issues
+
+Please report security vulnerabilities privately to the maintainers.
 
 ## 📄 License
 
