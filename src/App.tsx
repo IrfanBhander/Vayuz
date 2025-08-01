@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Cloud, Sparkles, Heart, Sun } from 'lucide-react';
-import { AuthProvider } from './contexts/AuthContext';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import WeatherMap from './components/WeatherMap';
@@ -11,7 +10,6 @@ import ThemeToggle from './components/ThemeToggle';
 import SettingsButton from './components/SettingsButton';
 import SettingsPanel from './components/SettingsPanel';
 import CloudyIcon from './components/CloudyIcon';
-import AuthButton from './components/auth/AuthButton';
 import { useWeather } from './hooks/useWeather';
 import { useSettings } from './contexts/SettingsContext';
 import { getPleasantWeatherInfo } from './utils/weatherUtils';
@@ -77,7 +75,6 @@ function App() {
       {/* Theme Toggle and Settings */}
       <MapToggle showMap={showMap} onToggle={() => setShowMap(!showMap)} />
       <ThemeToggle />
-      <SettingsButton onClick={() => setSettingsOpen(true)} />
       
       <div className="container mx-auto px-6 py-12 relative z-10">
         {/* Pleasant Header */}
