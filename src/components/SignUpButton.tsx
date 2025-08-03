@@ -18,7 +18,7 @@ const SignUpButton: React.FC = () => {
 
   if (user) {
     return (
-      <div className="fixed top-6 right-35 z-50 flex items-center gap-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full px-4 py-2">
+      <div className="fixed top-6 right-37 z-50 flex items-center gap-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full px-4 py-2">
         {user.photoURL && (
           <img 
             src={user.photoURL} 
