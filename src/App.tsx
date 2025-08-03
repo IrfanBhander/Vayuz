@@ -9,6 +9,7 @@ import ErrorMessage from './components/ErrorMessage';
 import ThemeToggle from './components/ThemeToggle';
 import SettingsButton from './components/SettingsButton';
 import SettingsPanel from './components/SettingsPanel';
+import SignUpButton from './components/SignUpButton';
 import CloudyIcon from './components/CloudyIcon';
 import { useWeather } from './hooks/useWeather';
 import { useSettings } from './contexts/SettingsContext';
@@ -75,6 +76,8 @@ function App() {
       {/* Theme Toggle and Settings */}
       <MapToggle showMap={showMap} onToggle={() => setShowMap(!showMap)} />
       <ThemeToggle />
+      <SignUpButton />
+      <SettingsButton onClick={() => setSettingsOpen(true)} />
       
       <div className="container mx-auto px-6 py-12 relative z-10">
         {/* Pleasant Header */}
