@@ -11,12 +11,12 @@ import {
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyC-5N2nw_te49UxEbc3Stgq1oDqgRd6yVQ",
-  authDomain: "authentication-d4c85.firebaseapp.com",
-  projectId: "authentication-d4c85",
-  storageBucket: "authentication-d4c85.firebasestorage.app",
-  messagingSenderId: "637596092579",
-  appId: "1:637596092579:web:f4cd9b45e63e3225b15716"
+    apiKey: "AIzaSyA0r-Oo98UAi2T47qd4gByLJGKqXLXgjxY",
+    authDomain: "login-system-bd7d8.firebaseapp.com",
+    projectId: "login-system-bd7d8",
+    storageBucket: "login-system-bd7d8.firebasestorage.app",
+    messagingSenderId: "55647466462",
+    appId: "1:55647466462:web:fbb63b90cce33df2e2e34f"
 };
 
 const app = initializeApp(firebaseConfig);
