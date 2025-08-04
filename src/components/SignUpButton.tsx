@@ -18,7 +18,7 @@ const SignUpButton: React.FC = () => {
 
   if (user) {
     return (
-      <div className="fixed top-6 right-44 z-50 flex items-center gap-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-white/50 dark:border-gray-600/50 rounded-full px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300">
+      <div className="fixed top-6 right-42 z-50 flex items-center gap-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-white/50 dark:border-gray-600/50 rounded-full px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300">
         {user.photoURL && (
           <img 
             src={user.photoURL} 
@@ -35,7 +35,7 @@ const SignUpButton: React.FC = () => {
     <>
       <button
         onClick={() => setShowAuthModal(true)}
-        className="fixed top-6 right-32 z-50 p-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 group hover:scale-110"
+        className="fixed top-6 right-36 z-50 p-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 group hover:scale-110"
         aria-label="Sign up"
         title="Sign Up"
       >
