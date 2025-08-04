@@ -18,12 +18,12 @@ const SignUpButton: React.FC = () => {
 
   if (user) {
     return (
-      <div className="fixed top-6 right-44 z-50 flex items-center gap-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full px-3 py-2">
+      <div className="fixed top-6 right-44 z-50 flex items-center gap-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-white/50 dark:border-gray-600/50 rounded-full px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300">
         {user.photoURL && (
           <img 
             src={user.photoURL} 
             alt="User profile" 
-            className="w-8 h-8 rounded-full"
+            className="w-8 h-8 rounded-full border-2 border-white/50 shadow-sm"
           />
         )}
         <Authentication onAuthSuccess={handleAuthSuccess} onAuthLogout={handleAuthLogout} />
@@ -35,12 +35,12 @@ const SignUpButton: React.FC = () => {
     <>
       <button
         onClick={() => setShowAuthModal(true)}
-        className="fixed top-6 right-44 z-50 p-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 group hover:scale-110"
+        className="fixed top-6 right-44 z-50 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-white/50 dark:border-gray-600/50 rounded-full hover:bg-white dark:hover:bg-gray-700 transition-all duration-300 group hover:scale-110 shadow-lg hover:shadow-xl"
         aria-label="Sign up"
         title="Sign Up"
       >
         <UserPlus 
-          className="text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300" 
+          className="text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300" 
           size={24} 
         />
       </button>
