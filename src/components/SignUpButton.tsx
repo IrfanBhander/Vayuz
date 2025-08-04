@@ -35,7 +35,7 @@ const SignUpButton: React.FC = () => {
     <>
       <button
         onClick={() => setShowAuthModal(true)}
-        className="fixed top-6 right-44 z-50 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-white/50 dark:border-gray-600/50 rounded-full hover:bg-white dark:hover:bg-gray-700 transition-all duration-300 group hover:scale-110 shadow-lg hover:shadow-xl"
+        className="fixed top-6 right-32 z-50 p-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 group hover:scale-110"
         aria-label="Sign up"
         title="Sign Up"
       >
