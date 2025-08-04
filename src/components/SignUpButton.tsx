@@ -18,7 +18,7 @@ const SignUpButton: React.FC = () => {
 
   if (user) {
     return (
-      <div className="fixed top-6 right-40 z-50 flex items-center gap-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full px-4 py-2">
+      <div className="fixed top-6 right-44 z-50 flex items-center gap-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-600/30 rounded-full px-3 py-2">
         {user.photoURL && (
           <img 
             src={user.photoURL} 
@@ -26,9 +26,6 @@ const SignUpButton: React.FC = () => {
             className="w-8 h-8 rounded-full"
           />
         )}
-        <span className="text-white font-medium text-sm">
-          {user.displayName || 'User'}
-        </span>
         <Authentication onAuthSuccess={handleAuthSuccess} onAuthLogout={handleAuthLogout} />
       </div>
     );
